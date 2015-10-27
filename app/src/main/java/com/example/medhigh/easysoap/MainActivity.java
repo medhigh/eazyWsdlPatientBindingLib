@@ -13,6 +13,7 @@ import wcf.IServiceEvents;
 import wcf.OperationResult;
 import wcf.PatientBinding;
 import wcf.RequestResultOfAuthtokenXmlkZUuIBUF;
+import wcf.RequestResultOfboolean;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.text)
@@ -46,12 +47,19 @@ public class MainActivity extends AppCompatActivity {
 //            PatientBinding binding = new PatientBinding();
 //            RequestResultOfAuthtokenXmlkZUuIBUF rq = binding.PatientLogin("ilya123", "test123");
 //            //AuthtokenXml token = rq.result;
-            PatientBinding binding = new PatientBinding(this,
-                    "http://meetmdservice.azurewebsites.net/API");
+            PatientBinding binding = new PatientBinding(this);
             RequestResultOfAuthtokenXmlkZUuIBUF brcRequestResultOfboolean;
             try {
-                brcRequestResultOfboolean= binding.PatientLogin("kostya123","test123");
-                return brcRequestResultOfboolean.Result.toString();
+                brcRequestResultOfboolean= binding.PatientLogin("ilya123", "test123");
+                RequestResultOfboolean chechRegistred =  binding.PatientCheckRegistered("ilya123");
+                RequestResultOfboolean changePassword = binding.PatientChangePassword(brcRequestResultOfboolean.Result, "test123");
+                //RequestResultOfboolean resetPassword = binding.PatientResetPassword("ilya123");
+                RequestResultOfboolean logout =  binding.PatientLogout(brcRequestResultOfboolean.Result);
+                return "Token:"+brcRequestResultOfboolean.Result.Token
+                        +"\nCheck Registered: "+chechRegistred.Result.toString()
+                        +"\nChange Passwd: "+changePassword.Result
+                        +"\nLogout: "+logout.Result
+                        ;
             } catch (Exception e) {
                 e.printStackTrace();
             }

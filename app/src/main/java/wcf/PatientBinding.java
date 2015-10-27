@@ -31,9 +31,9 @@ public class PatientBinding
         Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
     }
 
-    String url="http://meetmdservice.azurewebsites.net/API/XmlService.svc/Patient";
+    String url="http://meetmdservice.azurewebsites.net/API/XmlService.svc/Patient/";
 
-    int timeOut=60000;
+    int timeOut=6000;
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
 
