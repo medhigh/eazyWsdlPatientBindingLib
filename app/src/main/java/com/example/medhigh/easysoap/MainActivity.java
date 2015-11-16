@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import wcf.IServiceEvents;
 import wcf.OperationResult;
 import wcf.PatientBinding;
-import wcf.RequestResultOfAuthtokenXmlkZUuIBUF;
+import wcf.RequestResultOfAuthtokenXml;
 import wcf.RequestResultOfboolean;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 //            PatientBinding binding = new PatientBinding();
-//            RequestResultOfAuthtokenXmlkZUuIBUF rq = binding.PatientLogin("ilya123", "test123");
+//            RequestResultOfAuthtokenXml rq = binding.PatientLogin("ilya123", "test123");
 //            //AuthtokenXml token = rq.result;
             PatientBinding binding = new PatientBinding(this);
-            RequestResultOfAuthtokenXmlkZUuIBUF brcRequestResultOfboolean;
+            RequestResultOfAuthtokenXml brcRequestResultOfboolean;
             try {
                 brcRequestResultOfboolean= binding.PatientLogin("ilya123", "test123");
                 RequestResultOfboolean chechRegistred =  binding.PatientCheckRegistered("ilya123");

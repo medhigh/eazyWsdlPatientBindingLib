@@ -13,19 +13,21 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class CustomerSurveyQuestionXml extends AttributeContainer implements KvmSerializable
+public class RequestResultOfArrayOfHospitalXml extends AttributeContainer implements KvmSerializable
 {
 
     
-    public String Id;
+    public String ErrorMessage;
     
-    public String Question;
+    public ArrayOfHospitalXml Result=new ArrayOfHospitalXml();
+    
+    public Integer ResultStatus;
 
-    public CustomerSurveyQuestionXml()
+    public RequestResultOfArrayOfHospitalXml()
     {
     }
 
-    public CustomerSurveyQuestionXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public RequestResultOfArrayOfHospitalXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -42,7 +44,7 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
                 //if you have compilation error here, please use a ksoap2.jar and ExKsoap2.jar from libs folder (in the generated zip file)
                 PropertyInfo info=soapObject.getPropertyInfo(i0);
                 Object obj = info.getValue();
-                if (info.name.equals("Id"))
+                if (info.name.equals("ErrorMessage"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -50,15 +52,21 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Id = j.toString();
+                            this.ErrorMessage = j.toString();
                         }
                     }
                     else if (obj!= null && obj instanceof String){
-                        this.Id = (String)obj;
+                        this.ErrorMessage = (String)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("Question"))
+                if (info.name.equals("Result"))
+                {
+                    Object j = obj;
+                    this.Result = new ArrayOfHospitalXml(j,__envelope);
+                    continue;
+                }
+                if (info.name.equals("ResultStatus"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -66,11 +74,11 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Question = j.toString();
+                            this.ResultStatus = Integer.parseInt(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof String){
-                        this.Question = (String)obj;
+                    else if (obj!= null && obj instanceof Integer){
+                        this.ResultStatus = (Integer)obj;
                     }
                     continue;
                 }
@@ -89,11 +97,15 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
         //!!!!! You can find a correct version in Lib folder from generated zip file!!!!!
         if(propertyIndex==0)
         {
-            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
+            return this.ErrorMessage!=null?this.ErrorMessage:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==1)
         {
-            return this.Question!=null?this.Question:SoapPrimitive.NullSkip;
+            return this.Result!=null?this.Result:SoapPrimitive.NullSkip;
+        }
+        if(propertyIndex==2)
+        {
+            return this.ResultStatus!=null?this.ResultStatus:SoapPrimitive.NullSkip;
         }
         return null;
     }
@@ -101,7 +113,7 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
 
     @Override
     public int getPropertyCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -110,13 +122,19 @@ public class CustomerSurveyQuestionXml extends AttributeContainer implements Kvm
         if(propertyIndex==0)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Id";
+            info.name = "ErrorMessage";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==1)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Question";
+            info.type = PropertyInfo.VECTOR_CLASS;
+            info.name = "Result";
+            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        }
+        if(propertyIndex==2)
+        {
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "ResultStatus";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
     }
