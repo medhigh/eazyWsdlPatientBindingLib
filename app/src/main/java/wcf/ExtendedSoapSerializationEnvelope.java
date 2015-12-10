@@ -10,9 +10,12 @@ package wcf;
 //---------------------------------------------------
 
 
-
 import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.*;
+import org.ksoap2.serialization.MarshalFloat;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.kxml2.io.KXmlParser;
 import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParser;
@@ -20,14 +23,17 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Vector;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 public class ExtendedSoapSerializationEnvelope extends SoapSerializationEnvelope {
+    protected static final int QNAME_NAMESPACE = 0;
+    private static final String TYPE_LABEL = "type";
     static HashMap< String,Class> classNames = new HashMap< String, Class>();
+
     static {
         classNames.put("http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel^^RequestResultOfAuthtokenXml", RequestResultOfAuthtokenXml.class);
         classNames.put("http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel^^AuthtokenXml", AuthtokenXml.class);
@@ -75,10 +81,7 @@ public class ExtendedSoapSerializationEnvelope extends SoapSerializationEnvelope
         classNames.put("http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel^^ArrayOfCustomerSurveyXml", ArrayOfCustomerSurveyXml.class);
         classNames.put("http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel^^ArrayOfCustomerSurveyResultXml", ArrayOfCustomerSurveyResultXml.class);
         classNames.put("http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel^^ArrayOfInfoRecordXml", ArrayOfInfoRecordXml.class);
-    }   
-
-    protected static final int QNAME_NAMESPACE = 0;
-    private static final String TYPE_LABEL = "type";
+    }
 
     public ExtendedSoapSerializationEnvelope() {
         this(SoapEnvelope.VER11);

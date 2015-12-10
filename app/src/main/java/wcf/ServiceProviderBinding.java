@@ -13,43 +13,37 @@ package wcf;
 //---------------------------------------------------
 
 
-
-
 import org.ksoap2.HeaderProperty;
-import org.ksoap2.serialization.*;
-import org.ksoap2.transport.*;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
+import org.ksoap2.transport.Transport;
 
 import java.util.List;
 
 
 public class ServiceProviderBinding
 {
-    interface BKMIWcfMethod
-    {
-        ExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws Exception;
-
-        Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
-    }
-
-    String url="http://meetmdservice.azurewebsites.net/API/XmlService.svc/ServiceProvider";
-
-    int timeOut=60000;
     public List< HeaderProperty> httpHeaders;
     public boolean enableLogging;
-
+    String url = "http://meetmdservice.azurewebsites.net/API/XmlService.svc/ServiceProvider";
+    int timeOut = 60000;
     IServiceEvents callback;
-    public ServiceProviderBinding(){}
 
+    public ServiceProviderBinding() {
+    }
     public ServiceProviderBinding(IServiceEvents callback)
     {
         this.callback = callback;
     }
+
     public ServiceProviderBinding(IServiceEvents callback, String url)
     {
         this.callback = callback;
         this.url = url;
     }
-
     public ServiceProviderBinding(IServiceEvents callback, String url, int timeOut)
     {
         this.callback = callback;
@@ -78,7 +72,7 @@ public class ServiceProviderBinding
         }
         return null;
     }
-    
+
     protected ExtendedSoapSerializationEnvelope createEnvelope()
     {
         ExtendedSoapSerializationEnvelope envelope= new ExtendedSoapSerializationEnvelope(ExtendedSoapSerializationEnvelope.VER11);
@@ -127,7 +121,6 @@ public class ServiceProviderBinding
        return null;
     }
 
-        
     public RequestResultOfAuthtokenXml ProviderLogin(final String email, final String password ) throws Exception
     {
         return (RequestResultOfAuthtokenXml)execute(new BKMIWcfMethod()
@@ -137,7 +130,7 @@ public class ServiceProviderBinding
               ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderLogin");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -153,14 +146,14 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfAuthtokenXml)getResult(RequestResultOfAuthtokenXml.class,__result,"ProviderLoginResult",__envelope);
+                return getResult(RequestResultOfAuthtokenXml.class, __result, "ProviderLoginResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderLogin");
     }
-    
+
     public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfAuthtokenXml>> ProviderLoginAsync(final String email, final String password)
     {
         return executeAsync(new Functions.IFunc<RequestResultOfAuthtokenXml>() {
@@ -180,7 +173,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderGetFullInformation");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -190,10 +183,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfServiceProviderXml)getResult(RequestResultOfServiceProviderXml.class,__result,"ProviderGetFullInformationResult",__envelope);
+                return getResult(RequestResultOfServiceProviderXml.class, __result, "ProviderGetFullInformationResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderGetFullInformation");
     }
@@ -216,7 +209,7 @@ public class ServiceProviderBinding
               ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderResetPassword");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -226,10 +219,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderResetPasswordResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderResetPasswordResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderResetPassword");
     }
@@ -253,7 +246,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderLogout");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -263,10 +256,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderLogoutResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderLogoutResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderLogout");
     }
@@ -290,7 +283,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderChangePassword");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -306,10 +299,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderChangePasswordResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderChangePasswordResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderChangePassword");
     }
@@ -333,7 +326,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderGetSpecialities");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -343,10 +336,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfstring)getResult(RequestResultOfArrayOfstring.class,__result,"ProviderGetSpecialitiesResult",__envelope);
+                return getResult(RequestResultOfArrayOfstring.class, __result, "ProviderGetSpecialitiesResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderGetSpecialities");
     }
@@ -370,7 +363,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderChangeSpeciality");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -386,10 +379,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderChangeSpecialityResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderChangeSpecialityResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderChangeSpeciality");
     }
@@ -413,7 +406,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderChangeInfo");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -429,10 +422,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderChangeInfoResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderChangeInfoResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderChangeInfo");
     }
@@ -456,7 +449,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderChangePhoto");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -472,10 +465,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderChangePhotoResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderChangePhotoResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderChangePhoto");
     }
@@ -499,7 +492,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderSetAppointmentsPerPatient");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -515,10 +508,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderSetAppointmentsPerPatientResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderSetAppointmentsPerPatientResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderSetAppointmentsPerPatient");
     }
@@ -542,7 +535,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderChangeContacts");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -558,10 +551,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderChangeContactsResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderChangeContactsResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderChangeContacts");
     }
@@ -585,7 +578,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderFindLocation");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -601,10 +594,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfLocationXml)getResult(RequestResultOfArrayOfLocationXml.class,__result,"ProviderFindLocationResult",__envelope);
+                return getResult(RequestResultOfArrayOfLocationXml.class, __result, "ProviderFindLocationResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderFindLocation");
     }
@@ -629,7 +622,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","location",new LocationXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderAddLocation");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -645,10 +638,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderAddLocationResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderAddLocationResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderAddLocation");
     }
@@ -672,7 +665,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderRemoveLocation");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -688,10 +681,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"ProviderRemoveLocationResult",__envelope);
+                return getResult(RequestResultOfboolean.class, __result, "ProviderRemoveLocationResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderRemoveLocation");
     }
@@ -716,7 +709,7 @@ public class ServiceProviderBinding
                 __envelope.addMapping("http://tempuri.org/","newPattern",new TimeslotPatternXml().getClass());
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "ProviderAddTimeslotPattern");
                 __envelope.setOutputSoapObject(__soapReq);
-                
+
                 PropertyInfo __info=null;
                 __info = new PropertyInfo();
                 __info.namespace="http://tempuri.org/";
@@ -732,10 +725,10 @@ public class ServiceProviderBinding
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
             public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfTimeslotPatternXml)getResult(RequestResultOfArrayOfTimeslotPatternXml.class,__result,"ProviderAddTimeslotPatternResult",__envelope);
+                return getResult(RequestResultOfArrayOfTimeslotPatternXml.class, __result, "ProviderAddTimeslotPatternResult", __envelope);
             }
         },"http://tempuri.org/IServiceProvider/ProviderAddTimeslotPattern");
     }
@@ -752,7 +745,7 @@ public class ServiceProviderBinding
     public String ProviderRemoveTimeslotPattern(final String authToken,final String patternId ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderRemoveTimeslotPatternAsync(final String authToken, final String patternId)
@@ -767,7 +760,7 @@ public class ServiceProviderBinding
     public String ProviderGetTimeslotPatterns(final String authToken ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderGetTimeslotPatternsAsync(final String authToken)
@@ -782,7 +775,7 @@ public class ServiceProviderBinding
     public String ProviderGenerateAgenda(final String authToken,final String period,final String pattern ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderGenerateAgendaAsync(final String authToken, final String period, final String pattern)
@@ -797,7 +790,7 @@ public class ServiceProviderBinding
     public String ProviderCreateTimeslot(final String authToken,final String timeslot ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderCreateTimeslotAsync(final String authToken, final String timeslot)
@@ -812,7 +805,7 @@ public class ServiceProviderBinding
     public String ProviderGetAgenda(final String authToken,final String startDate,final String endDate ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderGetAgendaAsync(final String authToken, final String startDate, final String endDate)
@@ -827,7 +820,7 @@ public class ServiceProviderBinding
     public String ProviderFilterAgenda(final String authToken,final String state,final String startDate,final String endDate ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderFilterAgendaAsync(final String authToken, final String state, final String startDate, final String endDate)
@@ -842,7 +835,7 @@ public class ServiceProviderBinding
     public String ProviderBlockTimeslots(final String authToken,final String timeslotsIds ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderBlockTimeslotsAsync(final String authToken, final String timeslotsIds)
@@ -857,7 +850,7 @@ public class ServiceProviderBinding
     public String ProviderUnblockTimeslots(final String authToken,final String timeslotsIds ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderUnblockTimeslotsAsync(final String authToken, final String timeslotsIds)
@@ -872,7 +865,7 @@ public class ServiceProviderBinding
     public String ProviderCancelAppointments(final String authToken,final String timeslotsIds,final String cancelReason ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderCancelAppointmentsAsync(final String authToken, final String timeslotsIds, final String cancelReason)
@@ -887,7 +880,7 @@ public class ServiceProviderBinding
     public String ProviderRemoveTimeslots(final String authToken,final String timeslotIds,final String cancelReason ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderRemoveTimeslotsAsync(final String authToken, final String timeslotIds, final String cancelReason)
@@ -902,7 +895,7 @@ public class ServiceProviderBinding
     public String ProviderRemoveTimeslotsPeriod(final String authToken,final String startDate,final String endDate,final String cancelReason ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderRemoveTimeslotsPeriodAsync(final String authToken, final String startDate, final String endDate, final String cancelReason)
@@ -917,7 +910,7 @@ public class ServiceProviderBinding
     public String ProviderChangeAppointment(final String authToken,final String appointmentId,final String newTimeslot ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderChangeAppointmentAsync(final String authToken, final String appointmentId, final String newTimeslot)
@@ -932,7 +925,7 @@ public class ServiceProviderBinding
     public String ProviderCreateAppointment(final String authToken,final String timeslotId,final String insuranceNumber ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderCreateAppointmentAsync(final String authToken, final String timeslotId, final String insuranceNumber)
@@ -947,7 +940,7 @@ public class ServiceProviderBinding
     public String ProviderCreateAppointmentResults(final String authToken,final String appointmentId,final String results ) throws Exception
     {
 /*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return null;
     }
     
     public android.os.AsyncTask< Void, Void, OperationResult< String>> ProviderCreateAppointmentResultsAsync(final String authToken, final String appointmentId, final String results)
@@ -958,7 +951,6 @@ public class ServiceProviderBinding
             }
         });
     }
-
     
     protected Object execute(BKMIWcfMethod wcfMethod,String methodName) throws Exception
     {
@@ -968,7 +960,7 @@ public class ServiceProviderBinding
         try
         {
             sendRequest(methodName, __envelope, __httpTransport);
-            
+
         }
         finally {
             if (__httpTransport.debug) {
@@ -988,7 +980,7 @@ public class ServiceProviderBinding
             return wcfMethod.ProcessResult(__envelope,__retObj);
         }
     }
-    
+
     protected < T> android.os.AsyncTask< Void, Void, OperationResult< T>>  executeAsync(final Functions.IFunc< T> func)
     {
         return new android.os.AsyncTask< Void, Void, OperationResult< T>>()
@@ -996,7 +988,8 @@ public class ServiceProviderBinding
             @Override
             protected void onPreExecute() {
                 callback.Starting();
-            };
+            }
+
             @Override
             protected OperationResult< T> doInBackground(Void... params) {
                 OperationResult< T> result = new OperationResult< T>();
@@ -1011,7 +1004,7 @@ public class ServiceProviderBinding
                 }
                 return result;
             }
-            
+
             @Override
             protected void onPostExecute(OperationResult< T> result)
             {
@@ -1019,11 +1012,17 @@ public class ServiceProviderBinding
             }
         }.execute();
     }
-        
+
     Exception convertToException(org.ksoap2.SoapFault fault, ExtendedSoapSerializationEnvelope envelope)
     {
 
         return new Exception(fault.faultstring);
+    }
+
+    interface BKMIWcfMethod {
+        ExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws Exception;
+
+        Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
     }
 }
 

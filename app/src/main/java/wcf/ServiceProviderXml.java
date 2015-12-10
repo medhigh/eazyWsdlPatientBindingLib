@@ -10,9 +10,14 @@ package wcf;
 //---------------------------------------------------
 
 
-import java.util.Hashtable;
-import org.ksoap2.serialization.*;
+import org.ksoap2.serialization.AttributeContainer;
+import org.ksoap2.serialization.KvmSerializable;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+
 import java.math.BigDecimal;
+import java.util.Hashtable;
 
 public class ServiceProviderXml extends AttributeContainer implements KvmSerializable
 {

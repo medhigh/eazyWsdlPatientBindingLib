@@ -13,6 +13,7 @@ package wcf;
 
 public interface IServiceEvents
 {
-    public void Starting();
-    public void Completed(OperationResult result);
+    void Starting();
+
+    void Completed(OperationResult result);
 }

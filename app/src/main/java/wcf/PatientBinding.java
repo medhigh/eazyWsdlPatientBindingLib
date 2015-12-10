@@ -13,39 +13,32 @@ package wcf;
 //---------------------------------------------------
 
 
-
-
 import org.ksoap2.HeaderProperty;
-import org.ksoap2.serialization.*;
-import org.ksoap2.transport.*;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
+import org.ksoap2.transport.Transport;
 
 import java.util.List;
 
 
 public class PatientBinding
 {
-    interface BKMIWcfMethod
-    {
-        ExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws Exception;
-
-        Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
-    }
-
-    String url="http://meetmdservice.azurewebsites.net/API/XmlService.svc/Patient";
-
-    int timeOut=60000;
-    public List< HeaderProperty> httpHeaders;
+    public List<HeaderProperty> httpHeaders;
     public boolean enableLogging;
-
+    String url="http://meetmdservice.azurewebsites.net/API/XmlService.svc/Patient";
+    int timeOut=60000;
     IServiceEvents callback;
-    public PatientBinding(){}
 
+    public PatientBinding(){}
     public PatientBinding(IServiceEvents callback)
     {
         this.callback = callback;
     }
-    public PatientBinding(IServiceEvents callback, String url)
-    {
+
+    public PatientBinding(IServiceEvents callback, String url) {
         this.callback = callback;
         this.url = url;
     }
@@ -54,1446 +47,1404 @@ public class PatientBinding
     {
         this.callback = callback;
         this.url = url;
-        this.timeOut=timeOut;
+        this.timeOut = timeOut;
     }
 
     protected Transport createTransport()
     {
-        try
-        {
+        try {
             java.net.URI uri = new java.net.URI(url);
-            if(uri.getScheme().equalsIgnoreCase("https"))
-            {
-                int port=uri.getPort()>0?uri.getPort():443;
+            if (uri.getScheme().equalsIgnoreCase("https")) {
+                int port = uri.getPort() > 0 ? uri.getPort() : 443;
                 return new HttpsTransportSE(uri.getHost(), port, uri.getPath(), timeOut);
-            }
-            else
-            {
-                return new HttpTransportSE(url,timeOut);
+            } else {
+                return new HttpTransportSE(url, timeOut);
             }
 
-        }
-        catch (java.net.URISyntaxException e)
-        {
+        } catch (java.net.URISyntaxException e) {
         }
         return null;
     }
-    
+
     protected ExtendedSoapSerializationEnvelope createEnvelope()
     {
-        ExtendedSoapSerializationEnvelope envelope= new ExtendedSoapSerializationEnvelope(ExtendedSoapSerializationEnvelope.VER11);
+        ExtendedSoapSerializationEnvelope envelope = new ExtendedSoapSerializationEnvelope(ExtendedSoapSerializationEnvelope.VER11);
         return envelope;
     }
-    
-    protected List sendRequest(String methodName, ExtendedSoapSerializationEnvelope envelope, Transport transport  )throws Exception
+
+    protected List sendRequest(String methodName, ExtendedSoapSerializationEnvelope envelope, Transport transport) throws Exception
     {
         return transport.call(methodName, envelope, httpHeaders);
     }
 
     Object getResult(Class destObj, Object source, String resultName, ExtendedSoapSerializationEnvelope __envelope) throws Exception
     {
-        if(source==null)
-        {
+        if (source == null) {
             return null;
         }
-        if(source instanceof SoapPrimitive)
-        {
-            SoapPrimitive soap =(SoapPrimitive)source;
-            if(soap.getName().equals(resultName))
-            {
-                Object instance=__envelope.get(source,destObj);
+        if (source instanceof SoapPrimitive) {
+            SoapPrimitive soap = (SoapPrimitive) source;
+            if (soap.getName().equals(resultName)) {
+                Object instance = __envelope.get(source, destObj);
+                return instance;
+            }
+        } else {
+            SoapObject soap = (SoapObject) source;
+            if (soap.hasProperty(resultName)) {
+                Object j = soap.getProperty(resultName);
+                if (j == null) {
+                    return null;
+                }
+                Object instance = __envelope.get(j, destObj);
+                return instance;
+            } else if (soap.getName().equals(resultName)) {
+                Object instance = __envelope.get(source, destObj);
                 return instance;
             }
         }
-        else
-        {
-            SoapObject soap = (SoapObject)source;
-            if (soap.hasProperty(resultName))
-            {
-                Object j=soap.getProperty(resultName);
-                if(j==null)
-                {
-                    return null;
-                }
-                Object instance=__envelope.get(j,destObj);
-                return instance;
-            }
-            else if( soap.getName().equals(resultName)) {
-                Object instance=__envelope.get(source,destObj);
-                return instance;
-            }
-       }
 
-       return null;
+        return null;
     }
 
-        
-    public RequestResultOfAuthtokenXml PatientLogin(final String insuranceNumber, final String password ) throws Exception
+    public RequestResultOfAuthtokenXml PatientLogin(final String insuranceNumber, final String password) throws Exception
     {
-        return (RequestResultOfAuthtokenXml)execute(new BKMIWcfMethod()
+        return (RequestResultOfAuthtokenXml) execute(new BKMIWcfMethod()
         {
             @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
                 SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientLogin");
                 __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
+
+                PropertyInfo __info = null;
                 __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="insuranceNumber";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(insuranceNumber!=null?insuranceNumber:SoapPrimitive.NullSkip);
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "insuranceNumber";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(insuranceNumber != null ? insuranceNumber : SoapPrimitive.NullSkip);
                 __soapReq.addProperty(__info);
                 __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="password";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(password!=null?password:SoapPrimitive.NullSkip);
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "password";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(password != null ? password : SoapPrimitive.NullSkip);
                 __soapReq.addProperty(__info);
                 return __envelope;
             }
-            
+
             @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfAuthtokenXml)getResult(RequestResultOfAuthtokenXml.class,__result,"PatientLoginResult",__envelope);
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfAuthtokenXml.class, __result, "PatientLoginResult", __envelope);
             }
-        },"http://tempuri.org/IPatient/PatientLogin");
+        }, "http://tempuri.org/IPatient/PatientLogin");
     }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfAuthtokenXml>> PatientLoginAsync(final String insuranceNumber, final String password)
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfAuthtokenXml>> PatientLoginAsync(final String insuranceNumber, final String password)
     {
         return executeAsync(new Functions.IFunc<RequestResultOfAuthtokenXml>() {
             public RequestResultOfAuthtokenXml Func() throws Exception {
-                return PatientLogin( insuranceNumber,password);
-            }
-        });
-    }
-    
-    public RequestResultOfPatientXml PatientGetFullInformation(final AuthtokenXml authToken ) throws Exception
-    {
-        return (RequestResultOfPatientXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetFullInformation");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfPatientXml)getResult(RequestResultOfPatientXml.class,__result,"PatientGetFullInformationResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetFullInformation");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfPatientXml>> PatientGetFullInformationAsync(final AuthtokenXml authToken)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfPatientXml>() {
-            public RequestResultOfPatientXml Func() throws Exception {
-                return PatientGetFullInformation( authToken);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientCheckRegistered(final String insuranceNumber ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCheckRegistered");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="insuranceNumber";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(insuranceNumber!=null?insuranceNumber:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientCheckRegisteredResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientCheckRegistered");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientCheckRegisteredAsync(final String insuranceNumber)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientCheckRegistered( insuranceNumber);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientLogout(final AuthtokenXml authToken ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientLogout");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientLogoutResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientLogout");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientLogoutAsync(final AuthtokenXml authToken)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientLogout( authToken);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientChangePassword(final AuthtokenXml authToken, final String password ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientChangePassword");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="password";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(password!=null?password:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientChangePasswordResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientChangePassword");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientChangePasswordAsync(final AuthtokenXml authToken, final String password)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientChangePassword( authToken,password);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientResetPassword(final String insuranceNumber ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientResetPassword");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="insuranceNumber";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(insuranceNumber!=null?insuranceNumber:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientResetPasswordResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientResetPassword");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientResetPasswordAsync(final String insuranceNumber)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientResetPassword( insuranceNumber);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientSetDeviceInformation(final AuthtokenXml authToken, final ClientDeviceXml deviceInfo ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                __envelope.addMapping("http://tempuri.org/","deviceInfo",new ClientDeviceXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSetDeviceInformation");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="deviceInfo";
-                __info.type= ClientDeviceXml.class;
-                __info.setValue(deviceInfo!=null?deviceInfo:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientSetDeviceInformationResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientSetDeviceInformation");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientSetDeviceInformationAsync(final AuthtokenXml authToken, final ClientDeviceXml deviceInfo)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientSetDeviceInformation( authToken,deviceInfo);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByName(final AuthtokenXml authToken, final String providerNamePattern ) throws Exception
-    {
-        return (RequestResultOfArrayOfServiceProviderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByName");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="providerNamePattern";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(providerNamePattern!=null?providerNamePattern:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfServiceProviderXml)getResult(RequestResultOfArrayOfServiceProviderXml.class,__result,"PatientSearchProviderByNameResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientSearchProviderByName");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByNameAsync(final AuthtokenXml authToken, final String providerNamePattern)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
-            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
-                return PatientSearchProviderByName( authToken,providerNamePattern);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByCoordinates(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange ) throws Exception
-    {
-        return (RequestResultOfArrayOfServiceProviderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByCoordinates");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="coordinates";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(coordinates!=null?coordinates:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="minRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(minRange!=null?minRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="maxRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(maxRange!=null?maxRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfServiceProviderXml)getResult(RequestResultOfArrayOfServiceProviderXml.class,__result,"PatientSearchProviderByCoordinatesResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientSearchProviderByCoordinates");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByCoordinatesAsync(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
-            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
-                return PatientSearchProviderByCoordinates( authToken,coordinates,minRange,maxRange);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByAddress(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange ) throws Exception
-    {
-        return (RequestResultOfArrayOfServiceProviderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByAddress");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="address";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(address!=null?address:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="minRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(minRange!=null?minRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="maxRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(maxRange!=null?maxRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfServiceProviderXml)getResult(RequestResultOfArrayOfServiceProviderXml.class,__result,"PatientSearchProviderByAddressResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientSearchProviderByAddress");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByAddressAsync(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
-            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
-                return PatientSearchProviderByAddress( authToken,address,minRange,maxRange);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderBySpeciality(final AuthtokenXml authToken, final String speciality ) throws Exception
-    {
-        return (RequestResultOfArrayOfServiceProviderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderBySpeciality");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="speciality";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(speciality!=null?speciality:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfServiceProviderXml)getResult(RequestResultOfArrayOfServiceProviderXml.class,__result,"PatientSearchProviderBySpecialityResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientSearchProviderBySpeciality");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderBySpecialityAsync(final AuthtokenXml authToken, final String speciality)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
-            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
-                return PatientSearchProviderBySpeciality( authToken,speciality);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfstring PatientGetSpecialities(final AuthtokenXml authToken ) throws Exception
-    {
-        return (RequestResultOfArrayOfstring)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetSpecialities");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfstring)getResult(RequestResultOfArrayOfstring.class,__result,"PatientGetSpecialitiesResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetSpecialities");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfstring>> PatientGetSpecialitiesAsync(final AuthtokenXml authToken)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfstring>() {
-            public RequestResultOfArrayOfstring Func() throws Exception {
-                return PatientGetSpecialities( authToken);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfTimeslotXml PatientGetAgenda(final AuthtokenXml authToken, final String providerId ) throws Exception
-    {
-        return (RequestResultOfArrayOfTimeslotXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAgenda");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="providerId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(providerId!=null?providerId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfTimeslotXml)getResult(RequestResultOfArrayOfTimeslotXml.class,__result,"PatientGetAgendaResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetAgenda");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfTimeslotXml>> PatientGetAgendaAsync(final AuthtokenXml authToken, final String providerId)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfTimeslotXml>() {
-            public RequestResultOfArrayOfTimeslotXml Func() throws Exception {
-                return PatientGetAgenda( authToken,providerId);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfPatientReminderXml PatientCreateAppointment(final AuthtokenXml authToken, final String timeslotId ) throws Exception
-    {
-        return (RequestResultOfArrayOfPatientReminderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCreateAppointment");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="timeslotId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(timeslotId!=null?timeslotId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfPatientReminderXml)getResult(RequestResultOfArrayOfPatientReminderXml.class,__result,"PatientCreateAppointmentResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientCreateAppointment");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfPatientReminderXml>> PatientCreateAppointmentAsync(final AuthtokenXml authToken, final String timeslotId)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfPatientReminderXml>() {
-            public RequestResultOfArrayOfPatientReminderXml Func() throws Exception {
-                return PatientCreateAppointment( authToken,timeslotId);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientJoinWaitinglistProvider(final AuthtokenXml authToken, final String providerId ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientJoinWaitinglistProvider");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="providerId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(providerId!=null?providerId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientJoinWaitinglistProviderResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientJoinWaitinglistProvider");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientJoinWaitinglistProviderAsync(final AuthtokenXml authToken, final String providerId)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientJoinWaitinglistProvider( authToken,providerId);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientJoinWaitinglistSpeciality(final AuthtokenXml authToken, final String speciality, final String region ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientJoinWaitinglistSpeciality");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="speciality";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(speciality!=null?speciality:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="region";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(region!=null?region:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientJoinWaitinglistSpecialityResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientJoinWaitinglistSpeciality");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientJoinWaitinglistSpecialityAsync(final AuthtokenXml authToken, final String speciality, final String region)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientJoinWaitinglistSpeciality( authToken,speciality,region);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfAppointmentXml PatientGetAppointments(final AuthtokenXml authToken, final java.util.Date strartDate, final java.util.Date endDate ) throws Exception
-    {
-        return (RequestResultOfArrayOfAppointmentXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAppointments");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="strartDate";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(strartDate!=null? Helper.getDateTimeFormat().format(strartDate):SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="endDate";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(endDate!=null? Helper.getDateTimeFormat().format(endDate):SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfAppointmentXml)getResult(RequestResultOfArrayOfAppointmentXml.class,__result,"PatientGetAppointmentsResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetAppointments");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfAppointmentXml>> PatientGetAppointmentsAsync(final AuthtokenXml authToken, final java.util.Date strartDate, final java.util.Date endDate)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfAppointmentXml>() {
-            public RequestResultOfArrayOfAppointmentXml Func() throws Exception {
-                return PatientGetAppointments( authToken,strartDate,endDate);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfAppointmentXml PatientGetAppointmentsWithStatus(final AuthtokenXml authToken, final java.util.Date startDate, final java.util.Date endDate, final Integer status ) throws Exception
-    {
-        return (RequestResultOfArrayOfAppointmentXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAppointmentsWithStatus");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="startDate";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(startDate!=null? Helper.getDateTimeFormat().format(startDate):SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="endDate";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(endDate!=null? Helper.getDateTimeFormat().format(endDate):SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="status";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(status!=null?status:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfAppointmentXml)getResult(RequestResultOfArrayOfAppointmentXml.class,__result,"PatientGetAppointmentsWithStatusResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetAppointmentsWithStatus");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfAppointmentXml>> PatientGetAppointmentsWithStatusAsync(final AuthtokenXml authToken, final java.util.Date startDate, final java.util.Date endDate, final Integer status)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfAppointmentXml>() {
-            public RequestResultOfArrayOfAppointmentXml Func() throws Exception {
-                return PatientGetAppointmentsWithStatus( authToken,startDate,endDate,status);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfHospitalXml PatientGetHospitalsByCoordinates(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange ) throws Exception
-    {
-        return (RequestResultOfArrayOfHospitalXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetHospitalsByCoordinates");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="coordinates";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(coordinates!=null?coordinates:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="minRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(minRange!=null?minRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="maxRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(maxRange!=null?maxRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfHospitalXml)getResult(RequestResultOfArrayOfHospitalXml.class,__result,"PatientGetHospitalsByCoordinatesResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetHospitalsByCoordinates");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfHospitalXml>> PatientGetHospitalsByCoordinatesAsync(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfHospitalXml>() {
-            public RequestResultOfArrayOfHospitalXml Func() throws Exception {
-                return PatientGetHospitalsByCoordinates( authToken,coordinates,minRange,maxRange);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfHospitalXml PatientGetHospitalsByAddress(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange ) throws Exception
-    {
-        return (RequestResultOfArrayOfHospitalXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetHospitalsByAddress");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="address";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(address!=null?address:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="minRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(minRange!=null?minRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="maxRange";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(maxRange!=null?maxRange:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfHospitalXml)getResult(RequestResultOfArrayOfHospitalXml.class,__result,"PatientGetHospitalsByAddressResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetHospitalsByAddress");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfHospitalXml>> PatientGetHospitalsByAddressAsync(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfHospitalXml>() {
-            public RequestResultOfArrayOfHospitalXml Func() throws Exception {
-                return PatientGetHospitalsByAddress( authToken,address,minRange,maxRange);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientCancelAppointment(final AuthtokenXml authToken, final String appointmentId, final String cancelReason ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCancelAppointment");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="appointmentId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(appointmentId!=null?appointmentId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="cancelReason";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(cancelReason!=null?cancelReason:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientCancelAppointmentResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientCancelAppointment");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientCancelAppointmentAsync(final AuthtokenXml authToken, final String appointmentId, final String cancelReason)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientCancelAppointment( authToken,appointmentId,cancelReason);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientChangeAppointment(final AuthtokenXml authToken, final String appointmentId, final String newTimeslotId ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientChangeAppointment");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="appointmentId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(appointmentId!=null?appointmentId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="newTimeslotId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(newTimeslotId!=null?newTimeslotId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientChangeAppointmentResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientChangeAppointment");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientChangeAppointmentAsync(final AuthtokenXml authToken, final String appointmentId, final String newTimeslotId)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientChangeAppointment( authToken,appointmentId,newTimeslotId);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfCustomerSurveyXml PatientGetSurveys(final AuthtokenXml authToken, final Integer surveyState ) throws Exception
-    {
-        return (RequestResultOfArrayOfCustomerSurveyXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetSurveys");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="surveyState";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(surveyState!=null?surveyState:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfCustomerSurveyXml)getResult(RequestResultOfArrayOfCustomerSurveyXml.class,__result,"PatientGetSurveysResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetSurveys");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfCustomerSurveyXml>> PatientGetSurveysAsync(final AuthtokenXml authToken, final Integer surveyState)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfCustomerSurveyXml>() {
-            public RequestResultOfArrayOfCustomerSurveyXml Func() throws Exception {
-                return PatientGetSurveys( authToken,surveyState);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientFillinSurvey(final AuthtokenXml authToken, final String surveyId, final ArrayOfCustomerSurveyResultXml results ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                __envelope.addMapping("http://tempuri.org/","results",new ArrayOfCustomerSurveyResultXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientFillinSurvey");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="surveyId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(surveyId!=null?surveyId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="results";
-                __info.type=PropertyInfo.VECTOR_CLASS;
-                __info.setValue(results!=null?results:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientFillinSurveyResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientFillinSurvey");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientFillinSurveyAsync(final AuthtokenXml authToken, final String surveyId, final ArrayOfCustomerSurveyResultXml results)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientFillinSurvey( authToken,surveyId,results);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientCreateReminder(final AuthtokenXml authToken, final PatientReminderXml reminder ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                __envelope.addMapping("http://tempuri.org/","reminder",new PatientReminderXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCreateReminder");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="reminder";
-                __info.type= PatientReminderXml.class;
-                __info.setValue(reminder!=null?reminder:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientCreateReminderResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientCreateReminder");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientCreateReminderAsync(final AuthtokenXml authToken, final PatientReminderXml reminder)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientCreateReminder( authToken,reminder);
-            }
-        });
-    }
-    
-    public RequestResultOfboolean PatientRemoveReminder(final AuthtokenXml authToken, final String reminderId ) throws Exception
-    {
-        return (RequestResultOfboolean)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientRemoveReminder");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="reminderId";
-                __info.type=PropertyInfo.STRING_CLASS;
-                __info.setValue(reminderId!=null?reminderId:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfboolean)getResult(RequestResultOfboolean.class,__result,"PatientRemoveReminderResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientRemoveReminder");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfboolean>> PatientRemoveReminderAsync(final AuthtokenXml authToken, final String reminderId)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
-            public RequestResultOfboolean Func() throws Exception {
-                return PatientRemoveReminder( authToken,reminderId);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfPatientReminderXml PatientGetReminders(final AuthtokenXml authToken ) throws Exception
-    {
-        return (RequestResultOfArrayOfPatientReminderXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetReminders");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfPatientReminderXml)getResult(RequestResultOfArrayOfPatientReminderXml.class,__result,"PatientGetRemindersResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetReminders");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfPatientReminderXml>> PatientGetRemindersAsync(final AuthtokenXml authToken)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfPatientReminderXml>() {
-            public RequestResultOfArrayOfPatientReminderXml Func() throws Exception {
-                return PatientGetReminders( authToken);
-            }
-        });
-    }
-    
-    public RequestResultOfArrayOfInfoRecordXml PatientGetInfo(final AuthtokenXml authToken, final Integer offset, final Integer limit ) throws Exception
-    {
-        return (RequestResultOfArrayOfInfoRecordXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetInfo");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="offset";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(offset!=null?offset:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="limit";
-                __info.type=PropertyInfo.INTEGER_CLASS;
-                __info.setValue(limit!=null?limit:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfArrayOfInfoRecordXml)getResult(RequestResultOfArrayOfInfoRecordXml.class,__result,"PatientGetInfoResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetInfo");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfArrayOfInfoRecordXml>> PatientGetInfoAsync(final AuthtokenXml authToken, final Integer offset, final Integer limit)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfInfoRecordXml>() {
-            public RequestResultOfArrayOfInfoRecordXml Func() throws Exception {
-                return PatientGetInfo( authToken,offset,limit);
-            }
-        });
-    }
-    
-    public RequestResultOfTimeslotXml PatientGetWaitinglistOffers(final AuthtokenXml authToken ) throws Exception
-    {
-        return (RequestResultOfTimeslotXml)execute(new BKMIWcfMethod()
-        {
-            @Override
-            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
-              ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                __envelope.addMapping("http://tempuri.org/","authToken",new AuthtokenXml().getClass());
-                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetWaitinglistOffers");
-                __envelope.setOutputSoapObject(__soapReq);
-                
-                PropertyInfo __info=null;
-                __info = new PropertyInfo();
-                __info.namespace="http://tempuri.org/";
-                __info.name="authToken";
-                __info.type= AuthtokenXml.class;
-                __info.setValue(authToken!=null?authToken:SoapPrimitive.NullSkip);
-                __soapReq.addProperty(__info);
-                return __envelope;
-            }
-            
-            @Override
-            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result)throws Exception {
-                return (RequestResultOfTimeslotXml)getResult(RequestResultOfTimeslotXml.class,__result,"PatientGetWaitinglistOffersResult",__envelope);
-            }
-        },"http://tempuri.org/IPatient/PatientGetWaitinglistOffers");
-    }
-    
-    public android.os.AsyncTask< Void, Void, OperationResult<RequestResultOfTimeslotXml>> PatientGetWaitinglistOffersAsync(final AuthtokenXml authToken)
-    {
-        return executeAsync(new Functions.IFunc<RequestResultOfTimeslotXml>() {
-            public RequestResultOfTimeslotXml Func() throws Exception {
-                return PatientGetWaitinglistOffers( authToken);
+                return PatientLogin(insuranceNumber, password);
             }
         });
     }
 
-    
-    protected Object execute(BKMIWcfMethod wcfMethod,String methodName) throws Exception
+    public RequestResultOfPatientXml PatientGetFullInformation(final AuthtokenXml authToken) throws Exception
     {
-        Transport __httpTransport=createTransport();
-        __httpTransport.debug=enableLogging;
-        ExtendedSoapSerializationEnvelope __envelope=wcfMethod.CreateSoapEnvelope();
-        try
-        {
+        return (RequestResultOfPatientXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetFullInformation");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfPatientXml.class, __result, "PatientGetFullInformationResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetFullInformation");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfPatientXml>> PatientGetFullInformationAsync(final AuthtokenXml authToken)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfPatientXml>() {
+            public RequestResultOfPatientXml Func() throws Exception {
+                return PatientGetFullInformation(authToken);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientCheckRegistered(final String insuranceNumber) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCheckRegistered");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "insuranceNumber";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(insuranceNumber != null ? insuranceNumber : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientCheckRegisteredResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientCheckRegistered");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientCheckRegisteredAsync(final String insuranceNumber)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientCheckRegistered(insuranceNumber);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientLogout(final AuthtokenXml authToken) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientLogout");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientLogoutResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientLogout");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientLogoutAsync(final AuthtokenXml authToken)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientLogout(authToken);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientChangePassword(final AuthtokenXml authToken, final String password) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientChangePassword");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "password";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(password != null ? password : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientChangePasswordResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientChangePassword");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientChangePasswordAsync(final AuthtokenXml authToken, final String password)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientChangePassword(authToken, password);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientResetPassword(final String insuranceNumber) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientResetPassword");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "insuranceNumber";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(insuranceNumber != null ? insuranceNumber : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientResetPasswordResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientResetPassword");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientResetPasswordAsync(final String insuranceNumber)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientResetPassword(insuranceNumber);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientSetDeviceInformation(final AuthtokenXml authToken, final ClientDeviceXml deviceInfo) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                __envelope.addMapping("http://tempuri.org/", "deviceInfo", new ClientDeviceXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSetDeviceInformation");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "deviceInfo";
+                __info.type = ClientDeviceXml.class;
+                __info.setValue(deviceInfo != null ? deviceInfo : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientSetDeviceInformationResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientSetDeviceInformation");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientSetDeviceInformationAsync(final AuthtokenXml authToken, final ClientDeviceXml deviceInfo)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientSetDeviceInformation(authToken, deviceInfo);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByName(final AuthtokenXml authToken, final String providerNamePattern) throws Exception
+    {
+        return (RequestResultOfArrayOfServiceProviderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByName");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "providerNamePattern";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(providerNamePattern != null ? providerNamePattern : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfServiceProviderXml.class, __result, "PatientSearchProviderByNameResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientSearchProviderByName");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByNameAsync(final AuthtokenXml authToken, final String providerNamePattern)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
+            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
+                return PatientSearchProviderByName(authToken, providerNamePattern);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByCoordinates(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange) throws Exception
+    {
+        return (RequestResultOfArrayOfServiceProviderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByCoordinates");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "coordinates";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(coordinates != null ? coordinates : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "minRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(minRange != null ? minRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "maxRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(maxRange != null ? maxRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfServiceProviderXml.class, __result, "PatientSearchProviderByCoordinatesResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientSearchProviderByCoordinates");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByCoordinatesAsync(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
+            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
+                return PatientSearchProviderByCoordinates(authToken, coordinates, minRange, maxRange);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderByAddress(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange) throws Exception
+    {
+        return (RequestResultOfArrayOfServiceProviderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderByAddress");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "address";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(address != null ? address : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "minRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(minRange != null ? minRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "maxRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(maxRange != null ? maxRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfServiceProviderXml.class, __result, "PatientSearchProviderByAddressResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientSearchProviderByAddress");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderByAddressAsync(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
+            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
+                return PatientSearchProviderByAddress(authToken, address, minRange, maxRange);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfServiceProviderXml PatientSearchProviderBySpeciality(final AuthtokenXml authToken, final String speciality) throws Exception
+    {
+        return (RequestResultOfArrayOfServiceProviderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientSearchProviderBySpeciality");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "speciality";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(speciality != null ? speciality : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfServiceProviderXml.class, __result, "PatientSearchProviderBySpecialityResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientSearchProviderBySpeciality");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfServiceProviderXml>> PatientSearchProviderBySpecialityAsync(final AuthtokenXml authToken, final String speciality)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfServiceProviderXml>() {
+            public RequestResultOfArrayOfServiceProviderXml Func() throws Exception {
+                return PatientSearchProviderBySpeciality(authToken, speciality);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfstring PatientGetSpecialities(final AuthtokenXml authToken) throws Exception
+    {
+        return (RequestResultOfArrayOfstring) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetSpecialities");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfstring.class, __result, "PatientGetSpecialitiesResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetSpecialities");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfstring>> PatientGetSpecialitiesAsync(final AuthtokenXml authToken)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfstring>() {
+            public RequestResultOfArrayOfstring Func() throws Exception {
+                return PatientGetSpecialities(authToken);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfTimeslotXml PatientGetAgenda(final AuthtokenXml authToken, final String providerId) throws Exception
+    {
+        return (RequestResultOfArrayOfTimeslotXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAgenda");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "providerId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(providerId != null ? providerId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfTimeslotXml.class, __result, "PatientGetAgendaResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetAgenda");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfTimeslotXml>> PatientGetAgendaAsync(final AuthtokenXml authToken, final String providerId)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfTimeslotXml>() {
+            public RequestResultOfArrayOfTimeslotXml Func() throws Exception {
+                return PatientGetAgenda(authToken, providerId);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfPatientReminderXml PatientCreateAppointment(final AuthtokenXml authToken, final String timeslotId) throws Exception
+    {
+        return (RequestResultOfArrayOfPatientReminderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCreateAppointment");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "timeslotId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(timeslotId != null ? timeslotId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfPatientReminderXml.class, __result, "PatientCreateAppointmentResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientCreateAppointment");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfPatientReminderXml>> PatientCreateAppointmentAsync(final AuthtokenXml authToken, final String timeslotId)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfPatientReminderXml>() {
+            public RequestResultOfArrayOfPatientReminderXml Func() throws Exception {
+                return PatientCreateAppointment(authToken, timeslotId);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientJoinWaitinglistProvider(final AuthtokenXml authToken, final String providerId) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientJoinWaitinglistProvider");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "providerId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(providerId != null ? providerId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientJoinWaitinglistProviderResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientJoinWaitinglistProvider");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientJoinWaitinglistProviderAsync(final AuthtokenXml authToken, final String providerId)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientJoinWaitinglistProvider(authToken, providerId);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientJoinWaitinglistSpeciality(final AuthtokenXml authToken, final String speciality, final String region) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientJoinWaitinglistSpeciality");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "speciality";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(speciality != null ? speciality : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "region";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(region != null ? region : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientJoinWaitinglistSpecialityResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientJoinWaitinglistSpeciality");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientJoinWaitinglistSpecialityAsync(final AuthtokenXml authToken, final String speciality, final String region)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientJoinWaitinglistSpeciality(authToken, speciality, region);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfAppointmentXml PatientGetAppointments(final AuthtokenXml authToken, final java.util.Date strartDate, final java.util.Date endDate) throws Exception
+    {
+        return (RequestResultOfArrayOfAppointmentXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAppointments");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "strartDate";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(strartDate != null ? Helper.getDateTimeFormat().format(strartDate) : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "endDate";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(endDate != null ? Helper.getDateTimeFormat().format(endDate) : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfAppointmentXml.class, __result, "PatientGetAppointmentsResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetAppointments");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfAppointmentXml>> PatientGetAppointmentsAsync(final AuthtokenXml authToken, final java.util.Date strartDate, final java.util.Date endDate)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfAppointmentXml>() {
+            public RequestResultOfArrayOfAppointmentXml Func() throws Exception {
+                return PatientGetAppointments(authToken, strartDate, endDate);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfAppointmentXml PatientGetAppointmentsWithStatus(final AuthtokenXml authToken, final java.util.Date startDate, final java.util.Date endDate, final Integer status) throws Exception
+    {
+        return (RequestResultOfArrayOfAppointmentXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetAppointmentsWithStatus");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "startDate";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(startDate != null ? Helper.getDateTimeFormat().format(startDate) : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "endDate";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(endDate != null ? Helper.getDateTimeFormat().format(endDate) : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "status";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(status != null ? status : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfAppointmentXml.class, __result, "PatientGetAppointmentsWithStatusResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetAppointmentsWithStatus");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfAppointmentXml>> PatientGetAppointmentsWithStatusAsync(final AuthtokenXml authToken, final java.util.Date startDate, final java.util.Date endDate, final Integer status)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfAppointmentXml>() {
+            public RequestResultOfArrayOfAppointmentXml Func() throws Exception {
+                return PatientGetAppointmentsWithStatus(authToken, startDate, endDate, status);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfHospitalXml PatientGetHospitalsByCoordinates(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange) throws Exception
+    {
+        return (RequestResultOfArrayOfHospitalXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetHospitalsByCoordinates");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "coordinates";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(coordinates != null ? coordinates : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "minRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(minRange != null ? minRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "maxRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(maxRange != null ? maxRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfHospitalXml.class, __result, "PatientGetHospitalsByCoordinatesResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetHospitalsByCoordinates");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfHospitalXml>> PatientGetHospitalsByCoordinatesAsync(final AuthtokenXml authToken, final String coordinates, final Integer minRange, final Integer maxRange)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfHospitalXml>() {
+            public RequestResultOfArrayOfHospitalXml Func() throws Exception {
+                return PatientGetHospitalsByCoordinates(authToken, coordinates, minRange, maxRange);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfHospitalXml PatientGetHospitalsByAddress(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange) throws Exception
+    {
+        return (RequestResultOfArrayOfHospitalXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetHospitalsByAddress");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "address";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(address != null ? address : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "minRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(minRange != null ? minRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "maxRange";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(maxRange != null ? maxRange : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfHospitalXml.class, __result, "PatientGetHospitalsByAddressResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetHospitalsByAddress");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfHospitalXml>> PatientGetHospitalsByAddressAsync(final AuthtokenXml authToken, final String address, final Integer minRange, final Integer maxRange)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfHospitalXml>() {
+            public RequestResultOfArrayOfHospitalXml Func() throws Exception {
+                return PatientGetHospitalsByAddress(authToken, address, minRange, maxRange);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientCancelAppointment(final AuthtokenXml authToken, final String appointmentId, final String cancelReason) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCancelAppointment");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "appointmentId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(appointmentId != null ? appointmentId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "cancelReason";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(cancelReason != null ? cancelReason : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientCancelAppointmentResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientCancelAppointment");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientCancelAppointmentAsync(final AuthtokenXml authToken, final String appointmentId, final String cancelReason)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientCancelAppointment(authToken, appointmentId, cancelReason);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientChangeAppointment(final AuthtokenXml authToken, final String appointmentId, final String newTimeslotId) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientChangeAppointment");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "appointmentId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(appointmentId != null ? appointmentId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "newTimeslotId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(newTimeslotId != null ? newTimeslotId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientChangeAppointmentResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientChangeAppointment");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientChangeAppointmentAsync(final AuthtokenXml authToken, final String appointmentId, final String newTimeslotId)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientChangeAppointment(authToken, appointmentId, newTimeslotId);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfCustomerSurveyXml PatientGetSurveys(final AuthtokenXml authToken, final Integer surveyState) throws Exception
+    {
+        return (RequestResultOfArrayOfCustomerSurveyXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetSurveys");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "surveyState";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(surveyState != null ? surveyState : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfCustomerSurveyXml.class, __result, "PatientGetSurveysResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetSurveys");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfCustomerSurveyXml>> PatientGetSurveysAsync(final AuthtokenXml authToken, final Integer surveyState)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfCustomerSurveyXml>() {
+            public RequestResultOfArrayOfCustomerSurveyXml Func() throws Exception {
+                return PatientGetSurveys(authToken, surveyState);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientFillinSurvey(final AuthtokenXml authToken, final String surveyId, final ArrayOfCustomerSurveyResultXml results) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                __envelope.addMapping("http://tempuri.org/", "results", new ArrayOfCustomerSurveyResultXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientFillinSurvey");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "surveyId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(surveyId != null ? surveyId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "results";
+                __info.type = PropertyInfo.VECTOR_CLASS;
+                __info.setValue(results != null ? results : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientFillinSurveyResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientFillinSurvey");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientFillinSurveyAsync(final AuthtokenXml authToken, final String surveyId, final ArrayOfCustomerSurveyResultXml results)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientFillinSurvey(authToken, surveyId, results);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientCreateReminder(final AuthtokenXml authToken, final PatientReminderXml reminder) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                __envelope.addMapping("http://tempuri.org/", "reminder", new PatientReminderXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientCreateReminder");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "reminder";
+                __info.type = PatientReminderXml.class;
+                __info.setValue(reminder != null ? reminder : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientCreateReminderResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientCreateReminder");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientCreateReminderAsync(final AuthtokenXml authToken, final PatientReminderXml reminder)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientCreateReminder(authToken, reminder);
+            }
+        });
+    }
+
+    public RequestResultOfboolean PatientRemoveReminder(final AuthtokenXml authToken, final String reminderId) throws Exception
+    {
+        return (RequestResultOfboolean) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientRemoveReminder");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "reminderId";
+                __info.type = PropertyInfo.STRING_CLASS;
+                __info.setValue(reminderId != null ? reminderId : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfboolean.class, __result, "PatientRemoveReminderResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientRemoveReminder");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfboolean>> PatientRemoveReminderAsync(final AuthtokenXml authToken, final String reminderId)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfboolean>() {
+            public RequestResultOfboolean Func() throws Exception {
+                return PatientRemoveReminder(authToken, reminderId);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfPatientReminderXml PatientGetReminders(final AuthtokenXml authToken) throws Exception
+    {
+        return (RequestResultOfArrayOfPatientReminderXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetReminders");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfPatientReminderXml.class, __result, "PatientGetRemindersResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetReminders");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfPatientReminderXml>> PatientGetRemindersAsync(final AuthtokenXml authToken)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfPatientReminderXml>() {
+            public RequestResultOfArrayOfPatientReminderXml Func() throws Exception {
+                return PatientGetReminders(authToken);
+            }
+        });
+    }
+
+    public RequestResultOfArrayOfInfoRecordXml PatientGetInfo(final AuthtokenXml authToken, final Integer offset, final Integer limit) throws Exception
+    {
+        return (RequestResultOfArrayOfInfoRecordXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetInfo");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "offset";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(offset != null ? offset : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "limit";
+                __info.type = PropertyInfo.INTEGER_CLASS;
+                __info.setValue(limit != null ? limit : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfArrayOfInfoRecordXml.class, __result, "PatientGetInfoResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetInfo");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfArrayOfInfoRecordXml>> PatientGetInfoAsync(final AuthtokenXml authToken, final Integer offset, final Integer limit)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfArrayOfInfoRecordXml>() {
+            public RequestResultOfArrayOfInfoRecordXml Func() throws Exception {
+                return PatientGetInfo(authToken, offset, limit);
+            }
+        });
+    }
+
+    public RequestResultOfTimeslotXml PatientGetWaitinglistOffers(final AuthtokenXml authToken) throws Exception
+    {
+        return (RequestResultOfTimeslotXml) execute(new BKMIWcfMethod() {
+            @Override
+            public ExtendedSoapSerializationEnvelope CreateSoapEnvelope() {
+                ExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                __envelope.addMapping("http://tempuri.org/", "authToken", new AuthtokenXml().getClass());
+                SoapObject __soapReq = new SoapObject("http://tempuri.org/", "PatientGetWaitinglistOffers");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info = null;
+                __info = new PropertyInfo();
+                __info.namespace = "http://tempuri.org/";
+                __info.name = "authToken";
+                __info.type = AuthtokenXml.class;
+                __info.setValue(authToken != null ? authToken : SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object __result) throws Exception {
+                return getResult(RequestResultOfTimeslotXml.class, __result, "PatientGetWaitinglistOffersResult", __envelope);
+            }
+        }, "http://tempuri.org/IPatient/PatientGetWaitinglistOffers");
+    }
+
+    public android.os.AsyncTask<Void, Void, OperationResult<RequestResultOfTimeslotXml>> PatientGetWaitinglistOffersAsync(final AuthtokenXml authToken)
+    {
+        return executeAsync(new Functions.IFunc<RequestResultOfTimeslotXml>() {
+            public RequestResultOfTimeslotXml Func() throws Exception {
+                return PatientGetWaitinglistOffers(authToken);
+            }
+        });
+    }
+
+    protected Object execute(BKMIWcfMethod wcfMethod, String methodName) throws Exception
+    {
+        Transport __httpTransport = createTransport();
+        __httpTransport.debug = enableLogging;
+        ExtendedSoapSerializationEnvelope __envelope = wcfMethod.CreateSoapEnvelope();
+        try {
             sendRequest(methodName, __envelope, __httpTransport);
-            
-        }
-        finally {
+
+        } finally {
             if (__httpTransport.debug) {
                 if (__httpTransport.requestDump != null) {
-                    android.util.Log.i("requestDump",__httpTransport.requestDump);
+                    android.util.Log.i("requestDump", __httpTransport.requestDump);
                 }
                 if (__httpTransport.responseDump != null) {
-                    android.util.Log.i("responseDump",__httpTransport.responseDump);
+                    android.util.Log.i("responseDump", __httpTransport.responseDump);
                 }
             }
         }
         Object __retObj = __envelope.bodyIn;
-        if (__retObj instanceof org.ksoap2.SoapFault){
-            org.ksoap2.SoapFault __fault = (org.ksoap2.SoapFault)__retObj;
-            throw convertToException(__fault,__envelope);
-        }else{
-            return wcfMethod.ProcessResult(__envelope,__retObj);
+        if (__retObj instanceof org.ksoap2.SoapFault) {
+            org.ksoap2.SoapFault __fault = (org.ksoap2.SoapFault) __retObj;
+            throw convertToException(__fault, __envelope);
+        } else {
+            return wcfMethod.ProcessResult(__envelope, __retObj);
         }
     }
-    
-    protected < T> android.os.AsyncTask< Void, Void, OperationResult< T>>  executeAsync(final Functions.IFunc< T> func)
+
+    protected <T> android.os.AsyncTask<Void, Void, OperationResult<T>> executeAsync(final Functions.IFunc<T> func)
     {
-        return new android.os.AsyncTask< Void, Void, OperationResult< T>>()
+        return new android.os.AsyncTask<Void, Void, OperationResult<T>>()
         {
             @Override
             protected void onPreExecute() {
                 callback.Starting();
-            };
+            }
+
             @Override
-            protected OperationResult< T> doInBackground(Void... params) {
-                OperationResult< T> result = new OperationResult< T>();
-                try
-                {
-                    result.Result= func.Func();
-                }
-                catch(Exception ex)
-                {
+            protected OperationResult<T> doInBackground(Void... params) {
+                OperationResult<T> result = new OperationResult<T>();
+                try {
+                    result.Result = func.Func();
+                } catch (Exception ex) {
                     ex.printStackTrace();
-                    result.Exception=ex;
+                    result.Exception = ex;
                 }
                 return result;
             }
-            
+
             @Override
-            protected void onPostExecute(OperationResult< T> result)
-            {
+            protected void onPostExecute(OperationResult<T> result) {
                 callback.Completed(result);
             }
         }.execute();
     }
-        
+
     Exception convertToException(org.ksoap2.SoapFault fault, ExtendedSoapSerializationEnvelope envelope)
     {
 
         return new Exception(fault.faultstring);
+    }
+
+    interface BKMIWcfMethod
+    {
+        ExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws Exception;
+
+        Object ProcessResult(ExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
     }
 }
 
