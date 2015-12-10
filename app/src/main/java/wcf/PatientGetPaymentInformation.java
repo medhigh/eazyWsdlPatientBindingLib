@@ -13,17 +13,17 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class AuthtokenXml extends AttributeContainer implements KvmSerializable
+public class PatientGetPaymentInformation extends AttributeContainer implements KvmSerializable
 {
 
     
-    public String Token;
+    public AuthtokenXml authToken;
 
-    public AuthtokenXml()
+    public PatientGetPaymentInformation()
     {
     }
 
-    public AuthtokenXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public PatientGetPaymentInformation(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -40,20 +40,10 @@ public class AuthtokenXml extends AttributeContainer implements KvmSerializable
                 //if you have compilation error here, please use a ksoap2.jar and ExKsoap2.jar from libs folder (in the generated zip file)
                 PropertyInfo info=soapObject.getPropertyInfo(i0);
                 Object obj = info.getValue();
-                if (info.name.equals("Token"))
+                if (info.name.equals("authToken"))
                 {
-        
-                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
-                    {
-                        SoapPrimitive j =(SoapPrimitive) obj;
-                        if(j.toString()!=null)
-                        {
-                            this.Token = j.toString();
-                        }
-                    }
-                    else if (obj!= null && obj instanceof String){
-                        this.Token = (String)obj;
-                    }
+                    Object j = obj;
+                    this.authToken = (AuthtokenXml)__envelope.get(j, AuthtokenXml.class);
                     continue;
                 }
 
@@ -71,7 +61,7 @@ public class AuthtokenXml extends AttributeContainer implements KvmSerializable
         //!!!!! You can find a correct version in Lib folder from generated zip file!!!!!
         if(propertyIndex==0)
         {
-            return this.Token!=null?this.Token:SoapPrimitive.NullSkip;
+            return this.authToken!=null?this.authToken:SoapPrimitive.NullSkip;
         }
         return null;
     }
@@ -87,9 +77,9 @@ public class AuthtokenXml extends AttributeContainer implements KvmSerializable
     {
         if(propertyIndex==0)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Token";
-            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+            info.type = AuthtokenXml.class;
+            info.name = "authToken";
+            info.namespace= "http://tempuri.org/";
         }
     }
     

@@ -13,21 +13,21 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class RequestResultOfPatientXml extends AttributeContainer implements KvmSerializable
+public class ClientDeviceXml extends AttributeContainer implements KvmSerializable
 {
 
     
-    public String ErrorMessage;
+    public String DeviceToken;
     
-    public PatientXml Result;
+    public Integer DeviceType;
     
-    public Integer ResultStatus;
+    public String Id;
 
-    public RequestResultOfPatientXml()
+    public ClientDeviceXml()
     {
     }
 
-    public RequestResultOfPatientXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public ClientDeviceXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -44,7 +44,7 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
                 //if you have compilation error here, please use a ksoap2.jar and ExKsoap2.jar from libs folder (in the generated zip file)
                 PropertyInfo info=soapObject.getPropertyInfo(i0);
                 Object obj = info.getValue();
-                if (info.name.equals("ErrorMessage"))
+                if (info.name.equals("DeviceToken"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -52,21 +52,15 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.ErrorMessage = j.toString();
+                            this.DeviceToken = j.toString();
                         }
                     }
                     else if (obj!= null && obj instanceof String){
-                        this.ErrorMessage = (String)obj;
+                        this.DeviceToken = (String)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("Result"))
-                {
-                    Object j = obj;
-                    this.Result = (PatientXml)__envelope.get(j, PatientXml.class);
-                    continue;
-                }
-                if (info.name.equals("ResultStatus"))
+                if (info.name.equals("DeviceType"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -74,11 +68,27 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.ResultStatus = Integer.parseInt(j.toString());
+                            this.DeviceType = Integer.parseInt(j.toString());
                         }
                     }
                     else if (obj!= null && obj instanceof Integer){
-                        this.ResultStatus = (Integer)obj;
+                        this.DeviceType = (Integer)obj;
+                    }
+                    continue;
+                }
+                if (info.name.equals("Id"))
+                {
+        
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                    {
+                        SoapPrimitive j =(SoapPrimitive) obj;
+                        if(j.toString()!=null)
+                        {
+                            this.Id = j.toString();
+                        }
+                    }
+                    else if (obj!= null && obj instanceof String){
+                        this.Id = (String)obj;
                     }
                     continue;
                 }
@@ -97,15 +107,15 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
         //!!!!! You can find a correct version in Lib folder from generated zip file!!!!!
         if(propertyIndex==0)
         {
-            return this.ErrorMessage!=null?this.ErrorMessage:SoapPrimitive.NullSkip;
+            return this.DeviceToken!=null?this.DeviceToken:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==1)
         {
-            return this.Result!=null?this.Result:SoapPrimitive.NullSkip;
+            return this.DeviceType!=null?this.DeviceType:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==2)
         {
-            return this.ResultStatus!=null?this.ResultStatus:SoapPrimitive.NullSkip;
+            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
         }
         return null;
     }
@@ -122,19 +132,19 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
         if(propertyIndex==0)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "ErrorMessage";
+            info.name = "DeviceToken";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==1)
         {
-            info.type = PatientXml.class;
-            info.name = "Result";
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "DeviceType";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==2)
         {
-            info.type = PropertyInfo.INTEGER_CLASS;
-            info.name = "ResultStatus";
+            info.type = PropertyInfo.STRING_CLASS;
+            info.name = "Id";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
     }

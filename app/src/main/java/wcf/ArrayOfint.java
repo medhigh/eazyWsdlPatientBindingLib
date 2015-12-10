@@ -16,12 +16,12 @@ import java.util.Vector;
 import java.util.Hashtable;
 
 
-public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implements KvmSerializable
+public class ArrayOfint extends Vector< Integer> implements KvmSerializable
 {
     
-    public ArrayOfServiceProviderXml(){}
+    public ArrayOfint(){}
     
-    public ArrayOfServiceProviderXml(Object inObj, ExtendedSoapSerializationEnvelope __envelope)
+    public ArrayOfint(Object inObj, ExtendedSoapSerializationEnvelope __envelope)
     {
         if (inObj == null)
             return;
@@ -33,7 +33,7 @@ public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implem
             if (obj!=null && obj instanceof AttributeContainer)
             {
                 AttributeContainer j =(AttributeContainer) soapObject.getProperty(i0);
-                ServiceProviderXml j1= (ServiceProviderXml)__envelope.get(j, ServiceProviderXml.class);
+                Integer j1= Integer.parseInt(j.toString());
                 add(j1);
             }
         }
@@ -51,9 +51,9 @@ public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implem
     
     @Override
     public void getPropertyInfo(int index, @SuppressWarnings("rawtypes") Hashtable arg1, PropertyInfo info) {
-        info.name = "ServiceProviderXml";
-        info.type = ServiceProviderXml.class;
-    	info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        info.name = "int";
+        info.type = PropertyInfo.INTEGER_CLASS;
+    	info.namespace= "http://schemas.microsoft.com/2003/10/Serialization/Arrays";
     }
     
     @Override

@@ -16,12 +16,12 @@ import java.util.Vector;
 import java.util.Hashtable;
 
 
-public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implements KvmSerializable
+public class ArrayOfTimeslotPatternXml extends Vector<TimeslotPatternXml> implements KvmSerializable
 {
     
-    public ArrayOfServiceProviderXml(){}
+    public ArrayOfTimeslotPatternXml(){}
     
-    public ArrayOfServiceProviderXml(Object inObj, ExtendedSoapSerializationEnvelope __envelope)
+    public ArrayOfTimeslotPatternXml(Object inObj, ExtendedSoapSerializationEnvelope __envelope)
     {
         if (inObj == null)
             return;
@@ -33,7 +33,7 @@ public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implem
             if (obj!=null && obj instanceof AttributeContainer)
             {
                 AttributeContainer j =(AttributeContainer) soapObject.getProperty(i0);
-                ServiceProviderXml j1= (ServiceProviderXml)__envelope.get(j, ServiceProviderXml.class);
+                TimeslotPatternXml j1= (TimeslotPatternXml)__envelope.get(j, TimeslotPatternXml.class);
                 add(j1);
             }
         }
@@ -51,8 +51,8 @@ public class ArrayOfServiceProviderXml extends Vector<ServiceProviderXml> implem
     
     @Override
     public void getPropertyInfo(int index, @SuppressWarnings("rawtypes") Hashtable arg1, PropertyInfo info) {
-        info.name = "ServiceProviderXml";
-        info.type = ServiceProviderXml.class;
+        info.name = "TimeslotPatternXml";
+        info.type = TimeslotPatternXml.class;
     	info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
     }
     

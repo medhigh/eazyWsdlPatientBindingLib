@@ -9,11 +9,6 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import wcf.IServiceEvents;
-import wcf.OperationResult;
-import wcf.PatientBinding;
-import wcf.RequestResultOfAuthtokenXml;
-import wcf.RequestResultOfboolean;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.text)

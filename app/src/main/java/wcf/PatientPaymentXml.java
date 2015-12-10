@@ -13,29 +13,31 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class PatientXml extends AttributeContainer implements KvmSerializable
+public class PatientPaymentXml extends AttributeContainer implements KvmSerializable
 {
 
     
-    public String Email;
+    public Double Amount;
+    
+    public java.util.Date Date;
+    
+    public java.util.Date DueDate;
     
     public String Id;
     
-    public String InsuranceNumber;
+    public String Info;
     
-    public String Name;
+    public java.util.Date PaidDate;
     
-    public String PhoneNumber;
+    public PatientXml Patient;
     
-    public Double Rank;
-    
-    public String TaxNumbers;
+    public Integer Status;
 
-    public PatientXml()
+    public PatientPaymentXml()
     {
     }
 
-    public PatientXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public PatientPaymentXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -52,7 +54,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                 //if you have compilation error here, please use a ksoap2.jar and ExKsoap2.jar from libs folder (in the generated zip file)
                 PropertyInfo info=soapObject.getPropertyInfo(i0);
                 Object obj = info.getValue();
-                if (info.name.equals("Email"))
+                if (info.name.equals("Amount"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -60,11 +62,43 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Email = j.toString();
+                            this.Amount = new Double(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof String){
-                        this.Email = (String)obj;
+                    else if (obj!= null && obj instanceof Double){
+                        this.Amount = (Double)obj;
+                    }
+                    continue;
+                }
+                if (info.name.equals("Date"))
+                {
+        
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                    {
+                        SoapPrimitive j =(SoapPrimitive) obj;
+                        if(j.toString()!=null)
+                        {
+                            this.Date = Helper.ConvertFromWebService(j.toString());
+                        }
+                    }
+                    else if (obj!= null && obj instanceof java.util.Date){
+                        this.Date = (java.util.Date)obj;
+                    }
+                    continue;
+                }
+                if (info.name.equals("DueDate"))
+                {
+        
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                    {
+                        SoapPrimitive j =(SoapPrimitive) obj;
+                        if(j.toString()!=null)
+                        {
+                            this.DueDate = Helper.ConvertFromWebService(j.toString());
+                        }
+                    }
+                    else if (obj!= null && obj instanceof java.util.Date){
+                        this.DueDate = (java.util.Date)obj;
                     }
                     continue;
                 }
@@ -84,7 +118,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                     }
                     continue;
                 }
-                if (info.name.equals("InsuranceNumber"))
+                if (info.name.equals("Info"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -92,15 +126,15 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.InsuranceNumber = j.toString();
+                            this.Info = j.toString();
                         }
                     }
                     else if (obj!= null && obj instanceof String){
-                        this.InsuranceNumber = (String)obj;
+                        this.Info = (String)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("Name"))
+                if (info.name.equals("PaidDate"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -108,15 +142,21 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Name = j.toString();
+                            this.PaidDate = Helper.ConvertFromWebService(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof String){
-                        this.Name = (String)obj;
+                    else if (obj!= null && obj instanceof java.util.Date){
+                        this.PaidDate = (java.util.Date)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("PhoneNumber"))
+                if (info.name.equals("Patient"))
+                {
+                    Object j = obj;
+                    this.Patient = (PatientXml)__envelope.get(j, PatientXml.class);
+                    continue;
+                }
+                if (info.name.equals("Status"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -124,43 +164,11 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.PhoneNumber = j.toString();
+                            this.Status = Integer.parseInt(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof String){
-                        this.PhoneNumber = (String)obj;
-                    }
-                    continue;
-                }
-                if (info.name.equals("Rank"))
-                {
-        
-                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
-                    {
-                        SoapPrimitive j =(SoapPrimitive) obj;
-                        if(j.toString()!=null)
-                        {
-                            this.Rank = new Double(j.toString());
-                        }
-                    }
-                    else if (obj!= null && obj instanceof Double){
-                        this.Rank = (Double)obj;
-                    }
-                    continue;
-                }
-                if (info.name.equals("TaxNumbers"))
-                {
-        
-                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
-                    {
-                        SoapPrimitive j =(SoapPrimitive) obj;
-                        if(j.toString()!=null)
-                        {
-                            this.TaxNumbers = j.toString();
-                        }
-                    }
-                    else if (obj!= null && obj instanceof String){
-                        this.TaxNumbers = (String)obj;
+                    else if (obj!= null && obj instanceof Integer){
+                        this.Status = (Integer)obj;
                     }
                     continue;
                 }
@@ -179,31 +187,35 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
         //!!!!! You can find a correct version in Lib folder from generated zip file!!!!!
         if(propertyIndex==0)
         {
-            return this.Email!=null?this.Email:SoapPrimitive.NullSkip;
+            return this.Amount!=null?this.Amount:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==1)
         {
-            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
+            return this.Date!=null? Helper.getDateTimeFormat().format(this.Date):SoapPrimitive.NullSkip;
         }
         if(propertyIndex==2)
         {
-            return this.InsuranceNumber!=null?this.InsuranceNumber:SoapPrimitive.NullSkip;
+            return this.DueDate!=null? Helper.getDateTimeFormat().format(this.DueDate):SoapPrimitive.NullSkip;
         }
         if(propertyIndex==3)
         {
-            return this.Name!=null?this.Name:SoapPrimitive.NullSkip;
+            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==4)
         {
-            return this.PhoneNumber!=null?this.PhoneNumber:SoapPrimitive.NullSkip;
+            return this.Info!=null?this.Info:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==5)
         {
-            return this.Rank!=null?this.Rank:SoapPrimitive.NullSkip;
+            return this.PaidDate!=null? Helper.getDateTimeFormat().format(this.PaidDate):SoapPrimitive.NullSkip;
         }
         if(propertyIndex==6)
         {
-            return this.TaxNumbers!=null?this.TaxNumbers:SoapPrimitive.NullSkip;
+            return this.Patient!=null?this.Patient:SoapPrimitive.NullSkip;
+        }
+        if(propertyIndex==7)
+        {
+            return this.Status!=null?this.Status:SoapPrimitive.NullSkip;
         }
         return null;
     }
@@ -211,7 +223,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
 
     @Override
     public int getPropertyCount() {
-        return 7;
+        return 8;
     }
 
     @Override
@@ -219,44 +231,50 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
     {
         if(propertyIndex==0)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Email";
+            info.type = Double.class;
+            info.name = "Amount";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==1)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Id";
+            info.name = "Date";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==2)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "InsuranceNumber";
+            info.name = "DueDate";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==3)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Name";
+            info.name = "Id";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==4)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "PhoneNumber";
+            info.name = "Info";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==5)
         {
-            info.type = Double.class;
-            info.name = "Rank";
+            info.type = PropertyInfo.STRING_CLASS;
+            info.name = "PaidDate";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==6)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "TaxNumbers";
+            info.type = PatientXml.class;
+            info.name = "Patient";
+            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        }
+        if(propertyIndex==7)
+        {
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "Status";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
     }

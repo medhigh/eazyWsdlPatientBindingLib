@@ -13,21 +13,21 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class RequestResultOfPatientXml extends AttributeContainer implements KvmSerializable
+public class RequestResultOfTimeslotXml extends AttributeContainer implements KvmSerializable
 {
 
     
     public String ErrorMessage;
     
-    public PatientXml Result;
+    public TimeslotXml Result;
     
     public Integer ResultStatus;
 
-    public RequestResultOfPatientXml()
+    public RequestResultOfTimeslotXml()
     {
     }
 
-    public RequestResultOfPatientXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public RequestResultOfTimeslotXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -63,7 +63,7 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
                 if (info.name.equals("Result"))
                 {
                     Object j = obj;
-                    this.Result = (PatientXml)__envelope.get(j, PatientXml.class);
+                    this.Result = (TimeslotXml)__envelope.get(j, TimeslotXml.class);
                     continue;
                 }
                 if (info.name.equals("ResultStatus"))
@@ -127,7 +127,7 @@ public class RequestResultOfPatientXml extends AttributeContainer implements Kvm
         }
         if(propertyIndex==1)
         {
-            info.type = PatientXml.class;
+            info.type = TimeslotXml.class;
             info.name = "Result";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }

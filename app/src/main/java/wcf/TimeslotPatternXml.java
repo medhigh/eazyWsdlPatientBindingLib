@@ -13,29 +13,35 @@ package wcf;
 import java.util.Hashtable;
 import org.ksoap2.serialization.*;
 
-public class PatientXml extends AttributeContainer implements KvmSerializable
+public class TimeslotPatternXml extends AttributeContainer implements KvmSerializable
 {
 
     
-    public String Email;
+    public Boolean Enable;
+    
+    public String EndTime;
     
     public String Id;
     
-    public String InsuranceNumber;
+    public LocationXml Location;
     
     public String Name;
     
-    public String PhoneNumber;
+    public String StartTime;
     
-    public Double Rank;
+    public Integer TimeslotDuration;
     
-    public String TaxNumbers;
+    public Integer Type;
+    
+    public ArrayOfint WeekDays=new ArrayOfint();
+    
+    public Integer WeekType;
 
-    public PatientXml()
+    public TimeslotPatternXml()
     {
     }
 
-    public PatientXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
+    public TimeslotPatternXml(Object paramObj, ExtendedSoapSerializationEnvelope __envelope)
     {
 	    
 	    if (paramObj == null)
@@ -52,7 +58,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                 //if you have compilation error here, please use a ksoap2.jar and ExKsoap2.jar from libs folder (in the generated zip file)
                 PropertyInfo info=soapObject.getPropertyInfo(i0);
                 Object obj = info.getValue();
-                if (info.name.equals("Email"))
+                if (info.name.equals("Enable"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -60,11 +66,27 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Email = j.toString();
+                            this.Enable = new Boolean(j.toString());
+                        }
+                    }
+                    else if (obj!= null && obj instanceof Boolean){
+                        this.Enable = (Boolean)obj;
+                    }
+                    continue;
+                }
+                if (info.name.equals("EndTime"))
+                {
+        
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                    {
+                        SoapPrimitive j =(SoapPrimitive) obj;
+                        if(j.toString()!=null)
+                        {
+                            this.EndTime = j.toString();
                         }
                     }
                     else if (obj!= null && obj instanceof String){
-                        this.Email = (String)obj;
+                        this.EndTime = (String)obj;
                     }
                     continue;
                 }
@@ -84,20 +106,10 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                     }
                     continue;
                 }
-                if (info.name.equals("InsuranceNumber"))
+                if (info.name.equals("Location"))
                 {
-        
-                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
-                    {
-                        SoapPrimitive j =(SoapPrimitive) obj;
-                        if(j.toString()!=null)
-                        {
-                            this.InsuranceNumber = j.toString();
-                        }
-                    }
-                    else if (obj!= null && obj instanceof String){
-                        this.InsuranceNumber = (String)obj;
-                    }
+                    Object j = obj;
+                    this.Location = (LocationXml)__envelope.get(j, LocationXml.class);
                     continue;
                 }
                 if (info.name.equals("Name"))
@@ -116,7 +128,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                     }
                     continue;
                 }
-                if (info.name.equals("PhoneNumber"))
+                if (info.name.equals("StartTime"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -124,15 +136,15 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.PhoneNumber = j.toString();
+                            this.StartTime = j.toString();
                         }
                     }
                     else if (obj!= null && obj instanceof String){
-                        this.PhoneNumber = (String)obj;
+                        this.StartTime = (String)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("Rank"))
+                if (info.name.equals("TimeslotDuration"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -140,15 +152,15 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.Rank = new Double(j.toString());
+                            this.TimeslotDuration = Integer.parseInt(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof Double){
-                        this.Rank = (Double)obj;
+                    else if (obj!= null && obj instanceof Integer){
+                        this.TimeslotDuration = (Integer)obj;
                     }
                     continue;
                 }
-                if (info.name.equals("TaxNumbers"))
+                if (info.name.equals("Type"))
                 {
         
                     if (obj != null && obj.getClass().equals(SoapPrimitive.class))
@@ -156,11 +168,33 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
                         SoapPrimitive j =(SoapPrimitive) obj;
                         if(j.toString()!=null)
                         {
-                            this.TaxNumbers = j.toString();
+                            this.Type = Integer.parseInt(j.toString());
                         }
                     }
-                    else if (obj!= null && obj instanceof String){
-                        this.TaxNumbers = (String)obj;
+                    else if (obj!= null && obj instanceof Integer){
+                        this.Type = (Integer)obj;
+                    }
+                    continue;
+                }
+                if (info.name.equals("WeekDays"))
+                {
+                    Object j = obj;
+                    this.WeekDays = new ArrayOfint(j,__envelope);
+                    continue;
+                }
+                if (info.name.equals("WeekType"))
+                {
+        
+                    if (obj != null && obj.getClass().equals(SoapPrimitive.class))
+                    {
+                        SoapPrimitive j =(SoapPrimitive) obj;
+                        if(j.toString()!=null)
+                        {
+                            this.WeekType = Integer.parseInt(j.toString());
+                        }
+                    }
+                    else if (obj!= null && obj instanceof Integer){
+                        this.WeekType = (Integer)obj;
                     }
                     continue;
                 }
@@ -179,31 +213,43 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
         //!!!!! You can find a correct version in Lib folder from generated zip file!!!!!
         if(propertyIndex==0)
         {
-            return this.Email!=null?this.Email:SoapPrimitive.NullSkip;
+            return this.Enable!=null?this.Enable:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==1)
         {
-            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
+            return this.EndTime!=null?this.EndTime:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==2)
         {
-            return this.InsuranceNumber!=null?this.InsuranceNumber:SoapPrimitive.NullSkip;
+            return this.Id!=null?this.Id:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==3)
         {
-            return this.Name!=null?this.Name:SoapPrimitive.NullSkip;
+            return this.Location!=null?this.Location:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==4)
         {
-            return this.PhoneNumber!=null?this.PhoneNumber:SoapPrimitive.NullSkip;
+            return this.Name!=null?this.Name:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==5)
         {
-            return this.Rank!=null?this.Rank:SoapPrimitive.NullSkip;
+            return this.StartTime!=null?this.StartTime:SoapPrimitive.NullSkip;
         }
         if(propertyIndex==6)
         {
-            return this.TaxNumbers!=null?this.TaxNumbers:SoapPrimitive.NullSkip;
+            return this.TimeslotDuration!=null?this.TimeslotDuration:SoapPrimitive.NullSkip;
+        }
+        if(propertyIndex==7)
+        {
+            return this.Type!=null?this.Type:SoapPrimitive.NullSkip;
+        }
+        if(propertyIndex==8)
+        {
+            return this.WeekDays!=null?this.WeekDays:SoapPrimitive.NullSkip;
+        }
+        if(propertyIndex==9)
+        {
+            return this.WeekType!=null?this.WeekType:SoapPrimitive.NullSkip;
         }
         return null;
     }
@@ -211,7 +257,7 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
 
     @Override
     public int getPropertyCount() {
-        return 7;
+        return 10;
     }
 
     @Override
@@ -219,44 +265,62 @@ public class PatientXml extends AttributeContainer implements KvmSerializable
     {
         if(propertyIndex==0)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Email";
+            info.type = PropertyInfo.BOOLEAN_CLASS;
+            info.name = "Enable";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==1)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Id";
+            info.name = "EndTime";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==2)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "InsuranceNumber";
+            info.name = "Id";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==3)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "Name";
+            info.type = LocationXml.class;
+            info.name = "Location";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==4)
         {
             info.type = PropertyInfo.STRING_CLASS;
-            info.name = "PhoneNumber";
+            info.name = "Name";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==5)
         {
-            info.type = Double.class;
-            info.name = "Rank";
+            info.type = PropertyInfo.STRING_CLASS;
+            info.name = "StartTime";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
         if(propertyIndex==6)
         {
-            info.type = PropertyInfo.STRING_CLASS;
-            info.name = "TaxNumbers";
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "TimeslotDuration";
+            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        }
+        if(propertyIndex==7)
+        {
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "Type";
+            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        }
+        if(propertyIndex==8)
+        {
+            info.type = PropertyInfo.VECTOR_CLASS;
+            info.name = "WeekDays";
+            info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
+        }
+        if(propertyIndex==9)
+        {
+            info.type = PropertyInfo.INTEGER_CLASS;
+            info.name = "WeekType";
             info.namespace= "http://schemas.datacontract.org/2004/07/MeetMD.Models.DomainModel";
         }
     }
